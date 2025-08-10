@@ -1,22 +1,45 @@
 plugins {
     id 'java'
+    id 'io.qameta.allure' version '2.11.2'
 }
-
-group = 'org.example'
-version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testImplementation 'org.testng:testng:6.14.3'
-    // https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
-    testImplementation 'org.seleniumhq.selenium:selenium-java:4.19.1'
-    // https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager
-    implementation 'io.github.bonigarcia:webdrivermanager:5.7.0'
+    // Appium
+    implementation 'io.appium:java-client:8.5.1'
+
+    // TestNG
+    testImplementation 'org.testng:testng:7.8.0'
+
+    // Allure
+    implementation 'io.qameta.allure:allure-testng:2.23.0'
 }
 
 test {
     useTestNG()
+    systemProperty 'allure.results.directory', 'build/allure-results'
+    systemProperty "file.encoding", "UTF-8"
+    jvmArgs "-Dfile.encoding=UTF-8"
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+tasks.withType(Test) {
+    systemProperty "file.encoding", "UTF-8"
+}
+
+allure {
+    version = '2.23.0'
+    adapter {
+        frameworks {
+            testng {
+                adapterVersion = '2.23.0'
+            }
+        }
+    }
 }
